@@ -1,8 +1,11 @@
 import pygame
+import random
 from bullet import Bullet
 import Commons
 from sprites import SpriteSheet
 from sprites import sprites
+from sprites import enemies
+from sprites import bullets
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -58,13 +61,13 @@ class Player(pygame.sprite.Sprite):
         ## will give back a list of the keys which happen to be pressed down at that moment
         keystate = pygame.key.get_pressed()     
         if keystate[pygame.K_LEFT]:
-            self.x = -5
+            self.x = -3
         elif keystate[pygame.K_RIGHT]:
-            self.x = 5
+            self.x = 3
         if keystate[pygame.K_UP]:
-            self.y = -5
+            self.y = -3
         elif keystate[pygame.K_DOWN]:
-            self.y = 5
+            self.y = 3
 
         #Fire weapons by holding spacebar
         if keystate[pygame.K_SPACE]:
@@ -91,7 +94,7 @@ class Player(pygame.sprite.Sprite):
             if self.power == 1:
                 bullet = Bullet(self.rect.centerx, self.rect.top)
                 sprites.add(bullet)
-                #bullets.add(bullet)
+                bullets.add(bullet)
                 #shooting_sound.play()
             if self.power == 2:
                 bullet1 = Bullet(self.rect.left, self.rect.centery)
@@ -124,7 +127,39 @@ class Player(pygame.sprite.Sprite):
         self.hidden = True
         self.hide_timer = pygame.time.get_ticks()
         self.rect.center = (Commons.WIDTH / 2, Commons.HEIGHT + 200)
-        
+
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image_orig = enemy_imgs[0]
+        self.image_orig.set_colorkey(Commons.BLACK)
+        self.image = self.image_orig.copy()
+        self.rect = self.image.get_rect()
+        self.radius = int(self.rect.width *.90 / 2)
+        self.rect.x = random.randrange(0, Commons.WIDTH - self.rect.width)
+        self.rect.y = 50 #random.randrange(-150, -100)
+        self.speedy = random.randrange(5, 20)
+        self.frame = -1
+        self.frame_rate = 75
+        self.last_update = pygame.time.get_ticks()
+    def update(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_update > self.frame_rate:
+            self.last_update = now
+            self.frame += 1    
+            center = self.rect.center
+            self.image = enemy_imgs[self.frame]
+            self.image = pygame.transform.scale(self.image,(50,50))
+            self.rect = self.image.get_rect()
+            self.rect.center = center
+            if self.frame >= 3:
+                self.frame = -1
+   
+def new_enemy():
+    enemy  = Enemy()
+    sprites.add(enemy)
+    enemies.add(enemy)
+    
 ss = SpriteSheet('Lightning.png')
 player_imgs = []
 player_imgs.append(ss.get_image(0,0,30,30))
@@ -132,5 +167,16 @@ player_imgs.append(ss.get_image(32,0,30,30))
 player_imgs.append(ss.get_image(64,0,30,30))
 player_imgs.append(ss.get_image(96,0,30,30))
 
+ss1 = SpriteSheet('UFO.png')
+enemy_imgs = []
+enemy_imgs.append(ss1.get_image(0,0,30,30))
+enemy_imgs.append(ss1.get_image(32,0,30,30))
+enemy_imgs.append(ss1.get_image(64,0,30,30))
+enemy_imgs.append(ss1.get_image(96,0,30,30))
+
+
 player = Player()
+enemy = Enemy()
 sprites.add(player)
+sprites.add(enemy)
+enemies.add(enemy)

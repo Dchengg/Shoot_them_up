@@ -1,9 +1,11 @@
 import pygame
 import random
+import Entities
 from Entities import Player
 import Commons
 from sprites import sprites
-
+from sprites import enemies
+from sprites import bullets
 from os import path
 
 #sprites folder
@@ -19,7 +21,6 @@ background = pygame.transform.scale(background,(Commons.WIDTH,Commons.HEIGHT))
 background_rect = background_rect = background.get_rect()
 
 
-
 #game loop
 running = True
 while running:
@@ -29,6 +30,13 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
+    hits = pygame.sprite.groupcollide(enemies, bullets, True, True)
+    ## now as we delete the mob element when we hit one with a bullet, we need to respawn them again
+    ## as there will be no mob_elements left out 
+    for hit in hits:
+        print("HIT")
+        Entities.new_enemy()        ## spawn a new mob
+        
     screen.fill(Commons.BLACK)
     sprites.update()
     screen.blit(background, background_rect)
