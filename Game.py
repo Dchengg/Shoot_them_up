@@ -5,8 +5,8 @@ from os import path
 #sprites folder
 img_dir = path.join(path.dirname(__file__), 'Sprites')
 ## constantes del juego
-WIDTH = 480
-HEIGHT = 600
+WIDTH = 780
+HEIGHT = 700
 FPS = 60
 POWERUP_TIME = 5000
 BAR_LENGTH = 100
@@ -102,6 +102,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.top= 0
         self.rect.x += self.x
         self.rect.y += self.y
+        
 
     def shoot(self):
         ## to tell the bullet where to spawn
@@ -110,9 +111,9 @@ class Player(pygame.sprite.Sprite):
             self.last_shot = now
             if self.power == 1:
                 bullet = Bullet(self.rect.centerx, self.rect.top)
-                all_sprites.add(bullet)
-                bullets.add(bullet)
-                shooting_sound.play()
+                sprites.add(bullet)
+                #bullets.add(bullet)
+                #shooting_sound.play()
             if self.power == 2:
                 bullet1 = Bullet(self.rect.left, self.rect.centery)
                 bullet2 = Bullet(self.rect.right, self.rect.centery)
@@ -173,14 +174,56 @@ class SpriteSheet(object):
 
         # Return the image
         return image
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = bullet_img
+        self.image.set_colorkey(BLACK)
+        self.rect = self.image.get_rect()
+        ## place the bullet according to the current position of the player
+        self.rect.bottom = y 
+        self.rect.centerx = x
+        self.speedy = -10
 
+    def update(self):
+        """should spawn right in front of the player"""
+        self.rect.y += self.speedy
+        ## kill the sprite after it moves over the top border
+        if self.rect.bottom < 0:
+            self.kill()
+
+        ## now we need a way to shoot
+        ## lets bind it to "spacebar".
+        ## adding an event for it in Game loop
+
+## FIRE ZE MISSILES
+class Missile(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = missile_img
+        self.image.set_colorkey(BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.bottom = y
+        self.rect.centerx = x
+        self.speedy = -10
+
+    def update(self):
+        """should spawn right in front of the player"""
+        self.rect.y += self.speedy
+        if self.rect.bottom < 0:
+            self.kill()
+
+background = pygame.image.load(path.join(img_dir,'background.png')).convert()
+background = pygame.transform.scale(background,(WIDTH,HEIGHT))
+background_rect = background_rect = background.get_rect()
 ss = SpriteSheet('Lightning.png')
 player_imgs = []
 player_imgs.append(ss.get_image(0,0,30,30))
 player_imgs.append(ss.get_image(32,0,30,30))
 player_imgs.append(ss.get_image(64,0,30,30))
 player_imgs.append(ss.get_image(96,0,30,30))
-
+ss = SpriteSheet('Bullet_Collection.png')
+bullet_img = ss.get_image(398,255,20,20)
 
 
 sprites = pygame.sprite.Group()
@@ -196,9 +239,9 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-    screen.fill(BLUE)
+    screen.fill(BLACK)
     sprites.update()
-    #pygame.display.update()
+    screen.blit(background, background_rect)
     sprites.draw(screen)
     pygame.display.flip()      
     
