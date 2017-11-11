@@ -22,14 +22,13 @@ YELLOW = (255, 255, 0)
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
-screen.display.toggle_fullscreen
 pygame.display.set_caption("Game")
 
 font_name = pygame.font.match_font('Nova Square')
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(player_img, (50, 38))
+        self.image = player_imgs[0]
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.radius = 20
@@ -45,9 +44,23 @@ class Player(pygame.sprite.Sprite):
         self.hide_timer = pygame.time.get_ticks()
         self.power = 1
         self.power_timer = pygame.time.get_ticks()
+        self.last_update = pygame.time.get_ticks()
+        self.frame = -1
+        self.frame_rate = 75
         
     def update(self):
         ## time out for powerups
+        now = pygame.time.get_ticks()
+        if now - self.last_update > self.frame_rate:
+            self.last_update = now
+            self.frame += 1    
+            center = self.rect.center
+            self.image = player_imgs[self.frame]
+            self.rect = self.image.get_rect()
+            self.rect.center = center
+            if self.frame >= 3:
+                self.frame = -1
+                
         if self.power >=2 and pygame.time.get_ticks() - self.power_time > POWERUP_TIME:
             self.power -= 1
             self.power_time = pygame.time.get_ticks()
@@ -131,10 +144,44 @@ class Player(pygame.sprite.Sprite):
         self.hidden = True
         self.hide_timer = pygame.time.get_ticks()
         self.rect.center = (WIDTH / 2, HEIGHT + 200)
+        
+class SpriteSheet(object):
+    """ Class used to grab images out of a sprite sheet. """
+    # This points to our sprite sheet image
+    sprite_sheet = None
+
+    def __init__(self, file_name):
+        """ Constructor. Pass in the file name of the sprite sheet. """
+
+        # Load the sprite sheet.
+        self.sprite_sheet = pygame.image.load(path.join(img_dir,file_name)).convert()
 
 
+    def get_image(self, x, y, width, height):
+        """ Grab a single image out of a larger spritesheet
+            Pass in the x, y location of the sprite
+            and the width and height of the sprite. """
 
-player_img = pygame.image.load(path.join(img_dir,'fighter.png')).convert()
+        # Create a new blank image
+        image = pygame.Surface([width, height]).convert()
+
+        # Copy the sprite from the large sheet onto the smaller image
+        image.blit(self.sprite_sheet, (0, 0), (x, y, width, height))
+
+        # Assuming black works as the transparent color
+        image.set_colorkey(BLACK)
+
+        # Return the image
+        return image
+
+ss = SpriteSheet('Lightning.png')
+player_imgs = []
+player_imgs.append(ss.get_image(0,0,30,30))
+player_imgs.append(ss.get_image(32,0,30,30))
+player_imgs.append(ss.get_image(64,0,30,30))
+player_imgs.append(ss.get_image(96,0,30,30))
+
+
 
 sprites = pygame.sprite.Group()
 player = Player()
@@ -149,7 +196,7 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-    screen.fill(BLACK)
+    screen.fill(BLUE)
     sprites.update()
     #pygame.display.update()
     sprites.draw(screen)
