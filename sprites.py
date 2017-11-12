@@ -35,5 +35,7 @@ class SpriteSheet(object):
 sprites = pygame.sprite.Group()
 enemies = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
+bulletsEnemy = pygame.sprite.Group()
+PlayerSprite = pygame.sprite.Group()
 
 

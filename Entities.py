@@ -1,12 +1,14 @@
 import pygame
 import random
 from bullet import Bullet
+from bullet import BulletEnemy
 import Commons
 from sprites import SpriteSheet
 from sprites import sprites
 from sprites import enemies
 from sprites import bullets
-
+from sprites import PlayerSprite
+from sprites import bulletsEnemy
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -136,6 +138,8 @@ class Enemy(pygame.sprite.Sprite):
         self.frame = -1
         self.frame_rate = 75
         self.last_update = pygame.time.get_ticks()
+        self.last_shot = pygame.time.get_ticks()
+        self.shoot_delay = 400
     def update(self):
         now = pygame.time.get_ticks()
         if now - self.last_update > self.frame_rate:
@@ -148,6 +152,7 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.center = center
             if self.frame >= 3:
                 self.frame = -1
+        self.shoot()
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         if (self.rect.left < -25):
@@ -157,7 +162,15 @@ class Enemy(pygame.sprite.Sprite):
         if (self.rect.top > Commons.HEIGHT + 10):
             self.rect.x = random.randrange(0, Commons.WIDTH + self.rect.width)
             self.rect.y = random.randrange(-100, -40)
-            
+    def shoot(self):
+        ## to tell the bullet where to spawn
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > self.shoot_delay:
+            self.last_shot = now
+            bullet = BulletEnemy(self.rect.centerx, self.rect.bottom)
+            sprites.add(bullet)
+            bulletsEnemy.add(bullet)
+               
 def new_enemy():
     enemy  = Enemy()
     sprites.add(enemy)
@@ -180,6 +193,7 @@ enemy_imgs.append(ss1.get_image(96,0,30,30))
 
 player = Player()
 enemy = Enemy()
+PlayerSprite.add(player)
 sprites.add(player)
 sprites.add(enemy)
 enemies.add(enemy)

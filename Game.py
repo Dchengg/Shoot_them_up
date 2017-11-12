@@ -1,11 +1,13 @@
 import pygame
 import random
 import Entities
-from Entities import Player
+from Entities import player
 import Commons
 from sprites import sprites
 from sprites import enemies
 from sprites import bullets
+from sprites import PlayerSprite
+from sprites import bulletsEnemy
 from os import path
 
 #sprites folder
@@ -36,8 +38,12 @@ while running:
     ## as there will be no mob_elements left out 
     for hit in hits:
         print("HIT")
-        Entities.new_enemy()        ## spawn a new mob
-        
+        Entities.new_enemy()
+        Entities.new_enemy()
+    hitsPlayer = pygame.sprite.spritecollide(player,bulletsEnemy,True,pygame.sprite.collide_circle)
+    for hitP in hitsPlayer:
+        print("DEAD")
+        player.hide()
     screen.fill(Commons.BLACK)
     sprites.update()
     screen.blit(background, background_rect)
