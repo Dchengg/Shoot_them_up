@@ -53,27 +53,10 @@ class Player(pygame.sprite.Sprite):
             self.rect.centerx = Commons.WIDTH / 2
             self.rect.bottom = Commons.HEIGHT - 30
 
-        self.x = 0     ## makes the player static in the screen by default.
+        self.x = 0     
         self.y = 0
-        # then we have to check whether there is an event hanlding being done for the arrow keys being 
-        ## pressed 
-
-        ## will give back a list of the keys which happen to be pressed down at that moment
-        keystate = pygame.key.get_pressed()     
-        if keystate[pygame.K_LEFT]:
-            self.x = -3
-        elif keystate[pygame.K_RIGHT]:
-            self.x = 3
-        if keystate[pygame.K_UP]:
-            self.y = -3
-        elif keystate[pygame.K_DOWN]:
-            self.y = 3
-
-        #Fire weapons by holding spacebar
-        if keystate[pygame.K_SPACE]:
-            self.shoot()
-
-        ## check for the borders at the left and right
+        self.controls()
+        
         if self.rect.right > Commons.WIDTH:
             self.rect.right = Commons.WIDTH
         if self.rect.left < 0:
@@ -84,8 +67,18 @@ class Player(pygame.sprite.Sprite):
             self.rect.top= 0
         self.rect.x += self.x
         self.rect.y += self.y
-        
-
+    def controls(self):
+        keystate = pygame.key.get_pressed()     
+        if keystate[pygame.K_LEFT]:
+            self.x = -3
+        elif keystate[pygame.K_RIGHT]:
+            self.x = 3
+        if keystate[pygame.K_UP]:
+            self.y = -3
+        elif keystate[pygame.K_DOWN]:
+            self.y = 3
+        if keystate[pygame.K_SPACE]:
+            self.shoot()
     def shoot(self):
         ## to tell the bullet where to spawn
         now = pygame.time.get_ticks()
@@ -137,8 +130,9 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.radius = int(self.rect.width *.90 / 2)
         self.rect.x = random.randrange(0, Commons.WIDTH - self.rect.width)
-        self.rect.y = 50 #random.randrange(-150, -100)
-        self.speedy = random.randrange(5, 20)
+        self.rect.y = random.randrange(-150, -100)
+        self.speedx = 1
+        self.speedy = 1
         self.frame = -1
         self.frame_rate = 75
         self.last_update = pygame.time.get_ticks()
@@ -154,7 +148,16 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.center = center
             if self.frame >= 3:
                 self.frame = -1
-   
+        self.rect.x += self.speedx
+        self.rect.y += self.speedy
+        if (self.rect.left < -25):
+            self.speedx = 1
+        elif (self.rect.right > Commons.WIDTH + 20):
+            self.speedx = -1
+        if (self.rect.top > Commons.HEIGHT + 10):
+            self.rect.x = random.randrange(0, Commons.WIDTH + self.rect.width)
+            self.rect.y = random.randrange(-100, -40)
+            
 def new_enemy():
     enemy  = Enemy()
     sprites.add(enemy)

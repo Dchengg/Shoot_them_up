@@ -21,6 +21,7 @@ background = pygame.transform.scale(background,(Commons.WIDTH,Commons.HEIGHT))
 background_rect = background_rect = background.get_rect()
 
 
+
 #game loop
 running = True
 while running:
