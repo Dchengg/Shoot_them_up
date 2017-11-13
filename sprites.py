@@ -37,5 +37,6 @@ enemies = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
 bulletsEnemy = pygame.sprite.Group()
 PlayerSprite = pygame.sprite.Group()
+power_ups = pygame.sprite.Group()
 
 

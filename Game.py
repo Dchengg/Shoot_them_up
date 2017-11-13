@@ -1,6 +1,7 @@
 import pygame
 import random
 import Entities
+import Power_ups
 from Entities import player
 import Commons
 from sprites import sprites
@@ -8,6 +9,7 @@ from sprites import enemies
 from sprites import bullets
 from sprites import PlayerSprite
 from sprites import bulletsEnemy
+from sprites import power_ups
 from os import path
 
 #sprites folder
@@ -25,7 +27,7 @@ background_rect = background_rect = background.get_rect()
 
 
 #game loop
-running = True
+running  = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -39,7 +41,10 @@ while running:
     for hit in hits:
         print("HIT")
         Entities.new_enemy()
-        Entities.new_enemy()
+        pw = Power_ups.Pow(hit.rect.center)
+        sprites.add(pw)
+        power_ups.add(pw)
+            
     hitsPlayer = pygame.sprite.spritecollide(player,bulletsEnemy,True,pygame.sprite.collide_circle)
     for hitP in hitsPlayer:
         print("DEAD")

@@ -1,4 +1,5 @@
 import pygame
+import random
 import Commons
 from sprites import SpriteSheet
 class Bullet(pygame.sprite.Sprite):
@@ -24,18 +25,20 @@ class Bullet(pygame.sprite.Sprite):
         ## adding an event for it in Game loop
 
 class BulletEnemy(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y,PlayerX,PlayerY):
         pygame.sprite.Sprite.__init__(self)
-        self.image = bullet_img
+        self.image = bullet_enemy_img
+        self.image = pygame.transform.scale(self.image,(12,12))
         self.image.set_colorkey(Commons.BLACK)
         self.rect = self.image.get_rect()
         self.rect.bottom = y 
         self.rect.centerx = x
-        self.speedy = 2
-
+        self.speedy = random.randrange(1,3)
+        self.speedx = random.randrange(-1,1)
     def update(self):
         """should spawn right in front of the player"""
         self.rect.y += self.speedy
+        self.rect.x += self.speedx
         if self.rect.bottom < 0:
             self.kill()
 
@@ -59,5 +62,4 @@ class Missile(pygame.sprite.Sprite):
             
 ss = SpriteSheet('Bullet_Collection.png')
 bullet_img = ss.get_image(398,255,20,20)
-
-
+bullet_enemy_img = ss.get_image(320,268,18,18)

@@ -13,6 +13,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = player_imgs[0]
+        self.image = pygame.transform.scale(self.image,(50,50))
         self.image.set_colorkey(Commons.BLACK)
         self.rect = self.image.get_rect()
         self.radius = 20
@@ -40,6 +41,7 @@ class Player(pygame.sprite.Sprite):
             self.frame += 1    
             center = self.rect.center
             self.image = player_imgs[self.frame]
+            self.image = pygame.transform.scale(self.image,(50,50))
             self.rect = self.image.get_rect()
             self.rect.center = center
             if self.frame >= 3:
@@ -126,15 +128,14 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image_orig = enemy_imgs[0]
-        self.image_orig.set_colorkey(Commons.BLACK)
-        self.image = self.image_orig.copy()
+        self.image = enemy_imgs[0]
+        self.image = pygame.transform.scale(self.image,(50,50))
         self.rect = self.image.get_rect()
         self.radius = int(self.rect.width *.90 / 2)
         self.rect.x = random.randrange(0, Commons.WIDTH - self.rect.width)
         self.rect.y = random.randrange(-150, -100)
-        self.speedx = 1
-        self.speedy = 1
+        self.speedx = random.randrange(-2,2)
+        self.speedy = random.randrange(1,3)
         self.frame = -1
         self.frame_rate = 75
         self.last_update = pygame.time.get_ticks()
@@ -167,7 +168,7 @@ class Enemy(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         if now - self.last_shot > self.shoot_delay:
             self.last_shot = now
-            bullet = BulletEnemy(self.rect.centerx, self.rect.bottom)
+            bullet = BulletEnemy(self.rect.centerx, self.rect.bottom,player.x,player.y)
             sprites.add(bullet)
             bulletsEnemy.add(bullet)
                
@@ -192,8 +193,8 @@ enemy_imgs.append(ss1.get_image(96,0,30,30))
 
 
 player = Player()
-enemy = Enemy()
+for i in range(4):
+    new_enemy()
 PlayerSprite.add(player)
 sprites.add(player)
-sprites.add(enemy)
-enemies.add(enemy)
+
