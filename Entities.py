@@ -9,6 +9,8 @@ from sprites import enemies
 from sprites import bullets
 from sprites import PlayerSprite
 from sprites import bulletsEnemy
+from arduino_uno import ArduinoUNO
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -32,6 +34,13 @@ class Player(pygame.sprite.Sprite):
         self.last_update = pygame.time.get_ticks()
         self.frame = -1
         self.frame_rate = 75
+        puerto  = "COM7"
+        baudios = 9600
+        try:
+            self.arduino = ArduinoUNO(puerto, baudios)
+            self.arduino.leer()
+        except:
+            self.arduino = None
         
     def update(self):
         ## time out for powerups
@@ -83,6 +92,15 @@ class Player(pygame.sprite.Sprite):
             self.y = 3
         if keystate[pygame.K_SPACE]:
             self.shoot()
+        if self.arduino:
+            self.arduino_move(self.arduino.leer())
+    def arduino_move(self,value):
+        if value < 518:
+            value = -3
+            self.x = value
+        elif value > 518:
+            value = 3
+            self.x = value
     def shoot(self):
         ## to tell the bullet where to spawn
         now = pygame.time.get_ticks()
