@@ -9,7 +9,7 @@ from sprites import enemies
 from sprites import bullets
 from sprites import PlayerSprite
 from sprites import bulletsEnemy
-from arduino_uno import ArduinoUNO
+#from arduino_uno import ArduinoUNO
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -23,7 +23,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottom = Commons.HEIGHT - 10
         self.y = 0
         self.x = 0 
-        self.shield = 100
         self.shoot_delay = 250
         self.last_shot = pygame.time.get_ticks()
         self.lives = 3
@@ -34,13 +33,13 @@ class Player(pygame.sprite.Sprite):
         self.last_update = pygame.time.get_ticks()
         self.frame = -1
         self.frame_rate = 75
-        puerto  = "COM7"
+        """puerto  = "COM7"
         baudios = 9600
         try:
             self.arduino = ArduinoUNO(puerto, baudios)
             self.arduino.leer()
         except:
-            self.arduino = None
+            self.arduino = None"""
         
     def update(self):
         ## time out for powerups
@@ -92,8 +91,8 @@ class Player(pygame.sprite.Sprite):
             self.y = 3
         if keystate[pygame.K_SPACE]:
             self.shoot()
-        if self.arduino:
-            self.arduino_move(self.arduino.leer())
+       # if self.arduino:
+        #    self.arduino_move(self.arduino.leer())
     def arduino_move(self,value):
         if value < 518:
             value = -3
@@ -133,6 +132,7 @@ class Player(pygame.sprite.Sprite):
                 bullets.add(missile1)
                 shooting_sound.play()
                 missile_sound.play()
+ 
 
     def powerup(self):
         self.power += 1
@@ -158,7 +158,7 @@ class Enemy(pygame.sprite.Sprite):
         self.frame_rate = 75
         self.last_update = pygame.time.get_ticks()
         self.last_shot = pygame.time.get_ticks()
-        self.shoot_delay = 400
+        self.shoot_delay = 450
     def update(self):
         now = pygame.time.get_ticks()
         if now - self.last_update > self.frame_rate:
