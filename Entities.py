@@ -52,7 +52,7 @@ class Player(pygame.sprite.Sprite):
             self.frame += 1    
             center = self.rect.center
             self.image = player_imgs[self.frame]
-            self.image = pygame.transform.scale(self.image,(50,50))
+            self.image = pygame.transform.scale(self.image,(40,40))
             self.rect = self.image.get_rect()
             self.rect.center = center
             if self.frame >= 3:

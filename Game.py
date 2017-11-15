@@ -4,6 +4,7 @@ import Entities
 import Power_ups
 from Entities import player
 import Commons
+from bullet import BulletEnemy
 from sprites import sprites
 from sprites import enemies
 from sprites import bullets
@@ -60,6 +61,9 @@ class Game_Loop():
                 player.lives -=1
                 player.power = 1
                 player.hide()
+                for sprite in bulletsEnemy:
+                    if isinstance(sprite, BulletEnemy):
+                        sprite.kill()
             if player.lives == 0:
                 running = False
             hits = pygame.sprite.spritecollide(player, power_ups, True)
