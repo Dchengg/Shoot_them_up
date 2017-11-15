@@ -16,16 +16,29 @@ from os import path
 img_dir = path.join(path.dirname(__file__), 'Sprites')
 class Game_Loop():
     def __init__(self):
+        clock = pygame.time.Clock() 
         pygame.init()
         screen = pygame.display.set_mode((Commons.WIDTH,Commons.HEIGHT))
         pygame.display.set_caption("Game")
-        font_name = pygame.font.match_font('Nova Square')
         background = pygame.image.load(path.join(img_dir,'background.png')).convert()
         background = pygame.transform.scale(background,(Commons.WIDTH,Commons.HEIGHT))
         background_rect = background_rect = background.get_rect()
         #game loop
         running  = True
+        while True:
+            ev = pygame.event.poll()
+            if ev.type == pygame.KEYDOWN:
+                if ev.key == pygame.K_RETURN:
+                    break
+                elif ev.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
+            else:
+                self.draw_text(screen, "Press [ENTER] To Begin", 30, Commons.WIDTH/2, Commons.HEIGHT/2)
+                self.draw_text(screen, "or [Q] To Quit", 30, Commons.WIDTH/2, (Commons.HEIGHT/2)+40)
+                pygame.display.update()
         while running:
+            clock.tick(60)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -72,3 +85,12 @@ class Game_Loop():
             img_rect.x = x + 30 * i
             img_rect.y = y
             surf.blit(img, img_rect)
+    def draw_text(self,surf, text, size, x, y):
+        font_name = pygame.font.match_font('arial')
+        font = pygame.font.Font(font_name, size)
+        text_surface = font.render(text, True, Commons.WHITE)      
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (x, y)
+        surf.blit(text_surface, text_rect)
+
+

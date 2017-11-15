@@ -85,17 +85,16 @@ class Player(pygame.sprite.Sprite):
     def controls(self):
         keystate = pygame.key.get_pressed()     
         if keystate[pygame.K_LEFT]:
-            self.x = -3
+            self.x = -4
         elif keystate[pygame.K_RIGHT]:
-            self.x = 3
+            self.x = 4
         if keystate[pygame.K_UP]:
-            self.y = -3
+            self.y = -4
         elif keystate[pygame.K_DOWN]:
-            self.y = 3
+            self.y = 4
         if keystate[pygame.K_SPACE]:
             self.shoot()
-       # if self.arduino:
-        #    self.arduino_move(self.arduino.leer())
+
     def arduino_move(self,value):
         if value < 518:
             value = -3
@@ -153,7 +152,7 @@ class Enemy(pygame.sprite.Sprite):
         self.frame_rate = 75
         self.last_update = pygame.time.get_ticks()
         self.last_shot = pygame.time.get_ticks()
-        self.shoot_delay = 450
+        self.shoot_delay = 300
     def update(self):
         now = pygame.time.get_ticks()
         if now - self.last_update > self.frame_rate:

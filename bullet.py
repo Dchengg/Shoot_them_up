@@ -35,7 +35,7 @@ class BulletEnemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.bottom = y 
         self.rect.centerx = x
-        self.speedy = random.randrange(1,3)
+        self.speedy = random.randrange(1,4)
         self.speedx = random.randrange(-3,3)
     def update(self):
         """should spawn right in front of the player"""
