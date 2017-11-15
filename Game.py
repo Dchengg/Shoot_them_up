@@ -38,7 +38,7 @@ class Game_Loop():
                 self.draw_text(screen, "or [Q] To Quit", 30, Commons.WIDTH/2, (Commons.HEIGHT/2)+40)
                 pygame.display.update()
         while running:
-            clock.tick(60)
+            clock.tick(120)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
