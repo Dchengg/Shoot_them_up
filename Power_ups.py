@@ -12,7 +12,7 @@ class Pow(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image,(30,30))
         self.rect = self.image.get_rect()
         self.rect.center = center
-        self.speedy = 2
+        self.speedy = 1
 
     def update(self):
         """should spawn right in front of the player"""
@@ -23,8 +23,9 @@ class Pow(pygame.sprite.Sprite):
 
             
 ss = SpriteSheet('Power_Ups.png')
-upgrade = ss.get_image(525,30,130,130)
-extra_live = ss.get_image(792,33,120,120)
+
+extra_live  = ss.get_image(525,30,130,130)
+upgrade = ss.get_image(792,33,120,120)
 powerup_imgs = {}
 powerup_imgs['upgrade'] = upgrade
 powerup_imgs['extra_live'] = extra_live

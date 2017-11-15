@@ -18,6 +18,9 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image,(50,50))
         self.image.set_colorkey(Commons.BLACK)
         self.rect = self.image.get_rect()
+        self.image_lives = player_imgs[0]
+        self.image_lives = pygame.transform.scale(self.image_lives,(30,30))
+        self.image_lives.set_colorkey(Commons.BLACK)
         self.radius = 20
         self.rect.centerx = Commons.WIDTH / 2
         self.rect.bottom = Commons.HEIGHT - 10
@@ -106,32 +109,24 @@ class Player(pygame.sprite.Sprite):
         if now - self.last_shot > self.shoot_delay:
             self.last_shot = now
             if self.power == 1:
-                bullet = Bullet(self.rect.centerx, self.rect.top)
+                bullet = Bullet(self.rect.left, self.rect.top,0)
+                bullet2 = Bullet(self.rect.right,self.rect.top,0)
                 sprites.add(bullet)
+                sprites.add(bullet2)
                 bullets.add(bullet)
-                #shooting_sound.play()
-            if self.power == 2:
-                bullet1 = Bullet(self.rect.left, self.rect.centery)
-                bullet2 = Bullet(self.rect.right, self.rect.centery)
-                all_sprites.add(bullet1)
-                all_sprites.add(bullet2)
+                bullets.add(bullet2)
+            if self.power >= 2:
+                bullet1 = Bullet(self.rect.left, self.rect.centery,-2)
+                bullet2 = Bullet(self.rect.right, self.rect.centery,2)
+                bullet3 = Bullet(self.rect.centerx,self.rect.centery,0)
+                sprites.add(bullet1)
+                sprites.add(bullet2)
+                sprites.add(bullet3)
                 bullets.add(bullet1)
                 bullets.add(bullet2)
-                shooting_sound.play()
-
-            """ MOAR POWAH """
-            if self.power >= 3:
-                bullet1 = Bullet(self.rect.left, self.rect.centery)
-                bullet2 = Bullet(self.rect.right, self.rect.centery)
-                #missile1 = Missile(self.rect.centerx, self.rect.top) # Missile shoots from center of ship
-                all_sprites.add(bullet1)
-                all_sprites.add(bullet2)
-                all_sprites.add(missile1)
-                bullets.add(bullet1)
-                bullets.add(bullet2)
-                bullets.add(missile1)
-                shooting_sound.play()
-                missile_sound.play()
+                bullets.add(bullet3)
+            
+            
  
 
     def powerup(self):

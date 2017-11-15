@@ -20,9 +20,6 @@ class Game_Loop():
         screen = pygame.display.set_mode((Commons.WIDTH,Commons.HEIGHT))
         pygame.display.set_caption("Game")
         font_name = pygame.font.match_font('Nova Square')
-        image_lives = pygame.image.load(path.join(img_dir,'fighter.png')).convert()
-        image_lives = pygame.transform.scale(image_lives,(10,10))
-        image_lives.set_colorkey(Commons.BLACK)
         background = pygame.image.load(path.join(img_dir,'background.png')).convert()
         background = pygame.transform.scale(background,(Commons.WIDTH,Commons.HEIGHT))
         background_rect = background_rect = background.get_rect()
@@ -36,27 +33,35 @@ class Game_Loop():
                     if event.key == pygame.K_ESCAPE:
                         running = False
             hits = pygame.sprite.groupcollide(enemies, bullets, True, True)
-            ## now as we delete the mob element when we hit one with a bullet, we need to respawn them again
-            ## as there will be no mob_elements left out 
             for hit in hits:
                 print("HIT")
                 Entities.new_enemy()
-                pw = Power_ups.Pow(hit.rect.center)
-                sprites.add(pw)
-                power_ups.add(pw)
+                if random.random() > 0.8:
+                    pw = Power_ups.Pow(hit.rect.center)
+                    sprites.add(pw)
+                    power_ups.add(pw)
                     
             hitsPlayer = pygame.sprite.spritecollide(player,bulletsEnemy,True,pygame.sprite.collide_circle)
             for hitP in hitsPlayer:
                 print("DEAD")
                 player.lives -=1
+                player.power = 1
                 player.hide()
             if player.lives == 0:
                 running = False
-            self.draw_lives(screen,50,5,player.lives,image_lives)
+            hits = pygame.sprite.spritecollide(player, power_ups, True)
+            for hit in hits:
+                if hit.type == 'extra_live':
+                    if player.lives < 5:
+                        player.lives += 1
+                if hit.type == 'upgrade':
+                    player.powerup()
+                
             screen.fill(Commons.BLACK)
             sprites.update()
             screen.blit(background, background_rect)
             sprites.draw(screen)
+            self.draw_lives(screen,5,5,player.lives,player.image_lives)
             pygame.display.flip()      
             
         pygame.quit()
