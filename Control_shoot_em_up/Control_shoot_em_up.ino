@@ -15,5 +15,6 @@ void setup(){
 }
 void loop() {
   Serial.println("{\"x\" :" + (String)analogRead(x) + ", \"y\":" + (String)analogRead(y)+ ", \"a\":" + (String)digitalRead(a) +"}");
-
 }
+
+

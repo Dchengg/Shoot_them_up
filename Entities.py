@@ -9,10 +9,11 @@ from sprites import enemies
 from sprites import bullets
 from sprites import PlayerSprite
 from sprites import bulletsEnemy
-#from arduino_uno import ArduinoUNO
+from arduino_uno import ArduinoUNO
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
+        self.clock = pygame.time.Clock()
         pygame.sprite.Sprite.__init__(self)
         self.image = player_imgs[0]
         self.image = pygame.transform.scale(self.image,(50,50))
@@ -36,16 +37,17 @@ class Player(pygame.sprite.Sprite):
         self.last_update = pygame.time.get_ticks()
         self.frame = -1
         self.frame_rate = 75
-        """puerto  = "COM7"
+        puerto  = "COM4"
         baudios = 9600
         try:
             self.arduino = ArduinoUNO(puerto, baudios)
             self.arduino.leer()
         except:
-            self.arduino = None"""
+            self.arduino = None
         
     def update(self):
         ## time out for powerups
+        self.clock.tick(120)
         now = pygame.time.get_ticks()
         if now - self.last_update > self.frame_rate:
             self.last_update = now
@@ -70,7 +72,10 @@ class Player(pygame.sprite.Sprite):
 
         self.x = 0     
         self.y = 0
-        self.controls()
+        if self.arduino:
+            self.arduino_move(self.arduino.leer())
+        else:
+            self.controls()
         
         if self.rect.right > Commons.WIDTH:
             self.rect.right = Commons.WIDTH
@@ -96,12 +101,17 @@ class Player(pygame.sprite.Sprite):
             self.shoot()
 
     def arduino_move(self,value):
-        if value < 518:
-            value = -3
-            self.x = value
-        elif value > 518:
-            value = 3
-            self.x = value
+        if value[0] < 518:
+            self.x = -4
+        elif value[0] > 518:
+             self.x = 4
+        if value[1] < 507:
+             self.y = 4
+        elif value[1] > 507:
+            self.y = -4
+        if value[2] == 0:
+            self.shoot()
+
     def shoot(self):
         ## to tell the bullet where to spawn
         now = pygame.time.get_ticks()
@@ -210,3 +220,4 @@ for i in range(4):
 PlayerSprite.add(player)
 sprites.add(player)
 
+    

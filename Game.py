@@ -19,7 +19,7 @@ class Game_Loop():
     def __init__(self):
         clock = pygame.time.Clock() 
         pygame.init()
-        screen = pygame.display.set_mode((Commons.WIDTH,Commons.HEIGHT))
+        screen = pygame.display.set_mode((Commons.WIDTH,Commons.HEIGHT),pygame.FULLSCREEN)
         pygame.display.set_caption("Game")
         background = pygame.image.load(path.join(img_dir,'background.png')).convert()
         background = pygame.transform.scale(background,(Commons.WIDTH,Commons.HEIGHT))
@@ -36,7 +36,7 @@ class Game_Loop():
                     quit()
             else:
                 self.draw_text(screen, "Press [ENTER] To Begin", 30, Commons.WIDTH/2, Commons.HEIGHT/2)
-                self.draw_text(screen, "or [Q] To Quit", 30, Commons.WIDTH/2, (Commons.HEIGHT/2)+40)
+                self.draw_text(screen, "or [Q] To Quit", 30, Commons.   WIDTH/2, (Commons.HEIGHT/2)+40)
                 pygame.display.update()
         while running:
             clock.tick(120)
@@ -60,7 +60,7 @@ class Game_Loop():
                 print("DEAD")
                 player.lives -=1
                 player.power = 1
-                player.hide()
+                #player.hide()
                 for sprite in bulletsEnemy:
                     if isinstance(sprite, BulletEnemy):
                         sprite.kill()

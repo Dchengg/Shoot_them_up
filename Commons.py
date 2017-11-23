@@ -1,5 +1,5 @@
 ## constantes del juego
-WIDTH = 780
+WIDTH = 1200
 HEIGHT = 700
 FPS = 60
 POWERUP_TIME = 5000

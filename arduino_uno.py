@@ -26,7 +26,7 @@ class ArduinoUNO(Serial):
         jsonResult = self.readline()
         try:
             jsonObject = simplejson.loads(jsonResult)
-            return jsonObject["x"]
+            return jsonObject["x"],jsonObject["y"],jsonObject["a"]
         except Exception:
             pass
          
